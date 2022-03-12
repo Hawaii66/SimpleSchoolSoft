@@ -14,7 +14,5 @@ export function useFetch<T>(url:string,info:RequestInit) {
             .finally(()=>setLoading(false))
     },[url]);
 
-    console.log(data,loading);
-
     return {data,error,loading};
 }
