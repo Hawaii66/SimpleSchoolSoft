@@ -18,14 +18,14 @@ const parseMinute = (min:number) => {
 
 function Lesson() {
     const {username,password,school} = useContext(UserContext);
-    const {apiEndPoint} = useContext(StaticContext);
+    const {apiEndPoint, debug} = useContext(StaticContext);
 
     const url = `${apiEndPoint}/nextlesson?username=${username}&password=${password}&school=${school}`;
     const {data,loading} = useFetch<ILesson>(url,{method:"GET"});
 
     const date = new Date();
     var timeDiff = data === undefined ? 0 : (data.hour * 60 + data.minute) - (date.getHours() * 60 + date.getMinutes())
-    var timeDiff = data === undefined ? 0 : (data.hour * 60 + data.minute) - 580;
+    if(debug){timeDiff = data === undefined ? 0 : (data.hour * 60 + data.minute) - 580;}
 
     if(data && !loading && data.name === ""){
         return(
