@@ -24,9 +24,18 @@ export const Routes = (app:Express) => {
         {
             return res.status(400).send("Not valid username or password");
         }
-        
-        const browser = await puppeteer.launch({headless:true});
+
+        if(username === "" || password === "")
+        {
+            return res.status(400).send("Not valid username or password formating");
+        }
+
+        console.log(username,password);
+        console.log(Date.now())
+        const browser = await puppeteer.launch({headless:false});
         var result = await GetNextLesson(browser, username, password);
+        browser.close();
+        console.log(Date.now(),result)
         res.json(result);
     });
 

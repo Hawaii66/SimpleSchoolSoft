@@ -3,7 +3,10 @@ export interface ILesson {
     hour:number,
     minute:number,
     sal:string,
-    color:string
+    color:string,
+    endHour:number,
+    endMinute:number,
+    teacher:string
 }
 
 export interface ILunch {

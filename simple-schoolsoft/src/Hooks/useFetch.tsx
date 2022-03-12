@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-export const useFetch = (url:string, info:RequestInit) => {
-    const [data,setData] = useState();
+export function useFetch<T>(url:string,info:RequestInit) {
+    const [data,setData] = useState<T>();
     const [error,setError] = useState();
     const [loading, setLoading] = useState(true);
 

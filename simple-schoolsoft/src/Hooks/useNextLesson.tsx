@@ -15,7 +15,7 @@ function useNextLesson():INextLesson{
 
     const url = `${apiEndPoint}/nextlesson?username=${username}&password=${password}`;
    
-    const {data, error, loading} = useFetch(url,{method:"GET"});
+    const {data, error, loading} = useFetch<ILesson>(url,{method:"GET"});
 
     if(error !== undefined || data === undefined)
     {

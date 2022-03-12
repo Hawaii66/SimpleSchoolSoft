@@ -134,14 +134,17 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
     const currentDate = new Date();
     const currentDay = currentDate.getDay()
     var currentMin = currentDate.getMinutes() + currentDate.getHours() * 60;
-    
+    currentMin = 580;
     var minDiff = 100000;
     var lesson:ILesson = {
         hour:0,
         minute:0,
         name:"",
         sal:"",
-        color:""
+        color:"",
+        endHour:0,
+        endMinute:0,
+        teacher:""
     }
 
     for(var i = 0; i < schedules.length; i ++){
@@ -166,6 +169,9 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
                 hour:parseInt(timeDetail.split(":")[0]),
                 min:parseInt(timeDetail.split(":")[1])
             }
+            
+            
+
             const minutes = time.hour * 60 + time.min
 
             var diff = minutes - currentMin;
@@ -177,11 +183,24 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
                     getComputedStyle(el).backgroundColor
                 );
 
+                const endTime:{hour:number,min:number} = {
+                    hour:parseInt(timeDetail.split("-")[1].split(":")[0]),
+                    min:parseInt(timeDetail.split("-")[1].split(":")[1])
+                }
+
+                const teacherDetails = await page.$("#teachers_content");
+                if(!teacherDetails){return null;}
+                const teacherNameTD = await teacherDetails.$("td");
+                const teacherContent:string|undefined = (await(await teacherNameTD?.getProperty("innerHTML"))?.jsonValue());
+
                 lesson = {
                     hour:time.hour,
                     minute:time.min,
+                    endHour:endTime.hour,
+                    endMinute:endTime.min,
                     name:details.split("<br>")[1],
                     sal:details.split("<br>")[2],
+                    teacher:teacherContent?.split("<br>")[0] || "",
                     color:color
                 }
             }
