@@ -5,12 +5,33 @@
     margin: auto;
 }
 
+.down {
+    flex-direction: column;
+}
+
 .full-vh {
     min-height: 100vh;
 }
 
+.text-center {
+    text-align: center;
+}
+
 .w50 {
     width: 50%;
+}
+
+.w30 {
+    width: 30%;
+}
+
+.m2 {
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+}
+
+.border-card {
+    border: 2px rgba(40, 40, 40, 0.3) solid !important;
 }
 
 body,
@@ -20,6 +41,9 @@ body,
 
 @media screen and (max-width:992px) {
     .w50 {
+        width: 90%;
+    }
+    .w30 {
         width: 90%;
     }
 }
