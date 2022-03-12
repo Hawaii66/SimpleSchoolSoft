@@ -41,9 +41,9 @@ export const Routes = (app:Express) => {
             var result = await GetNextLesson(browser, username, password, school);
             browser.close();
             res.json(result);
-        }catch(err){
+        }catch(err:any){
             browser.close();
-            console.log(err);
+            console.log(err,err.stack);
             res.status(500).send("Error with Puppeteer");
         }
     });
