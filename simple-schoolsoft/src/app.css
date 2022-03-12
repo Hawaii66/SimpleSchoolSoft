@@ -1,0 +1,25 @@
+.middle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+.full-vh {
+    min-height: 100vh;
+}
+
+.w50 {
+    width: 50%;
+}
+
+body,
+#root {
+    min-height: 100vh;
+}
+
+@media screen and (max-width:992px) {
+    .w50 {
+        width: 90%;
+    }
+}
