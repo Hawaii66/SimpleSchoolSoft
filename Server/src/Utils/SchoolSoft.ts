@@ -157,9 +157,11 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
 
     for(var i = 0; i < schedules.length; i ++){
         const eng = await schedules[i].$("span");
+        console.log("Found lesson span");
         if(!eng){return;}
         await eng.click();
         await sleep(300)
+        console.log("Big window up");
 
         const lectionInfo = await page.$("[id=lessonInfo_content");
         const details:string|undefined = (await(await lectionInfo?.getProperty("innerHTML"))?.jsonValue());
@@ -171,8 +173,10 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
             details.includes("fre") ? 4 :
             details.includes("lör") ? 5 : 6
 
+        console.log("Details found");
         if(currentDay === date)
         {
+            console.log("Correct date");
             var timeDetail = details.split(" ")[0];
             const time:{hour:number,min:number} = {
                 hour:parseInt(timeDetail.split(":")[0]),
@@ -215,8 +219,9 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
             }
         }
 
-        const closeButton = await page.$("button[title=close]");
-        await closeButton?.click();
+        //const closeButton = await page.$("button[title=close]");
+        //await closeButton?.click();
+        page.keyboard.press("Escape");
 
         console.log("Lesson - Closing button", details);
     }
