@@ -135,9 +135,12 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
     console.log("Lesson - Viewing schedule");
 
     const currentDate = new Date();
-    const currentDay = currentDate.getDay()
+    var currentDay = currentDate.getDay()
     var currentMin = currentDate.getMinutes() + currentDate.getHours() * 60;
-    currentMin = 580;
+
+    if(process.env.fakeDate){currentDay = 0}
+    if(process.env.fakeDate){currentMin = 580}
+    
     var minDiff = 100000;
     var lesson:ILesson = {
         hour:0,
@@ -156,16 +159,17 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
         const eng = await schedules[i].$("span");
         if(!eng){return;}
         await eng.click();
-        await sleep(250)
+        await sleep(300)
+
         const lectionInfo = await page.$("[id=lessonInfo_content");
         const details:string|undefined = (await(await lectionInfo?.getProperty("innerHTML"))?.jsonValue());
         if(!details){return;}
-        const date = details.includes("mån") ? 6 : 
-            details.includes("tis") ? 2 :
-            details.includes("ons") ? 3 :
-            details.includes("tor") ? 4 :
-            details.includes("fre") ? 5 :
-            details.includes("lör") ? 6 : 0
+        const date = details.includes("mån") ? 0 : 
+            details.includes("tis") ? 1 :
+            details.includes("ons") ? 2 :
+            details.includes("tor") ? 3 :
+            details.includes("fre") ? 4 :
+            details.includes("lör") ? 5 : 6
 
         if(currentDay === date)
         {
