@@ -30,6 +30,10 @@
     margin-top: 2rem;
 }
 
+.mb2 {
+    margin-bottom: 2rem;
+}
+
 .border-card {
     border: 2px rgba(40, 40, 40, 0.3) solid !important;
 }

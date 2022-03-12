@@ -4,16 +4,16 @@ import { GetLunchMenu, GetNextLesson } from "../Utils/SchoolSoft";
 
 export const Routes = (app:Express) => {
     app.get("/lunch", async(req,res)=>{
-        const {username, password} = req.query;
+        const {username, password, school} = req.query;
 
-        if(typeof username !== "string" || typeof password !== "string")
+        if(typeof username !== "string" || typeof password !== "string" || typeof school !== "string")
         {
             return res.status(400).send("Not valid username or password");
         }
 
         const browser = await puppeteer.launch({headless:true});
         try{
-            var result = await GetLunchMenu(browser,username,password);
+            var result = await GetLunchMenu(browser,username,password,school);
             browser.close();
             res.json(result);
         } catch(err){
@@ -24,21 +24,21 @@ export const Routes = (app:Express) => {
     });
 
     app.get("/nextlesson", async(req,res)=>{
-        const {username, password} = req.query;
+        const {username, password, school} = req.query;
 
-        if(typeof username !== "string" || typeof password !== "string")
+        if(typeof username !== "string" || typeof password !== "string" || typeof school !== "string")
         {
             return res.status(400).send("Not valid username or password");
         }
 
-        if(username === "" || password === "")
+        if(username === "" || password === "" || school === "")
         {
             return res.status(400).send("Not valid username or password formating");
         }
 
         const browser = await puppeteer.launch({headless:false});
         try{
-            var result = await GetNextLesson(browser, username, password);
+            var result = await GetNextLesson(browser, username, password, school);
             browser.close();
             res.json(result);
         }catch(err){

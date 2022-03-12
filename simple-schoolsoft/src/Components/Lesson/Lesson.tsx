@@ -17,10 +17,10 @@ const parseMinute = (min:number) => {
 }
 
 function Lesson() {
-    const {username,password} = useContext(UserContext);
+    const {username,password,school} = useContext(UserContext);
     const {apiEndPoint} = useContext(StaticContext);
 
-    const url = `${apiEndPoint}/nextlesson?username=${username}&password=${password}`;
+    const url = `${apiEndPoint}/nextlesson?username=${username}&password=${password}&school=${school}`;
     const {data,loading} = useFetch<ILesson>(url,{method:"GET"});
 
     const date = new Date();

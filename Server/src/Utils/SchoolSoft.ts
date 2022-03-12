@@ -7,9 +7,9 @@ const GetCurrentPage = async (browser:puppeteer.Browser) =>
     return (await browser.pages())[1];
 }
 
-const Auth = async (browser:puppeteer.Browser, user:string,pass:string) => 
+const Auth = async (browser:puppeteer.Browser, user:string,pass:string, sch:string) => 
 {
-    const loginURL = "https://sms12.schoolsoft.se/nykopingsenskilda/jsp/Login.jsp"
+    const loginURL = `https://sms12.schoolsoft.se/${sch}/jsp/Login.jsp`
     var page = await GetCurrentPage(browser);
 
     if(page.url() !== loginURL)
@@ -39,10 +39,10 @@ const Auth = async (browser:puppeteer.Browser, user:string,pass:string) =>
     return await GetCurrentPage(browser);
 }
 
-export const GetLunchMenu = async (browser:puppeteer.Browser,username:string,password:string) => {
+export const GetLunchMenu = async (browser:puppeteer.Browser,username:string,password:string,sch:string) => {
     await browser.newPage();
 
-    var page = await Auth(browser,username,password);
+    var page = await Auth(browser,username,password,sch);
     if(page === null){return;}
 
     const menu = await page.$("a[name=lunchmenu]");
@@ -97,9 +97,9 @@ export const GetLunchMenu = async (browser:puppeteer.Browser,username:string,pas
     });
 }
 
-export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:string) => {
+export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:string,sch:string) => {
     var page = await browser.newPage();
-    await page.goto("https://sms12.schoolsoft.se/nykopingsenskilda/jsp/Login.jsp");
+    await page.goto(`https://sms12.schoolsoft.se/${sch}/jsp/Login.jsp`);
 
     await page.select("select[id=usertype]", "1");
     //await sleep(1000);
@@ -169,8 +169,6 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
                 hour:parseInt(timeDetail.split(":")[0]),
                 min:parseInt(timeDetail.split(":")[1])
             }
-            
-            
 
             const minutes = time.hour * 60 + time.min
 
