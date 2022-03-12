@@ -9,6 +9,8 @@ const GetCurrentPage = async (browser:puppeteer.Browser) =>
 
 const Auth = async (browser:puppeteer.Browser, user:string,pass:string, sch:string) => 
 {
+    if(sch === null){return null;}
+
     const loginURL = `https://sms12.schoolsoft.se/${sch}/jsp/Login.jsp`
     var page = await GetCurrentPage(browser);
 
@@ -17,6 +19,8 @@ const Auth = async (browser:puppeteer.Browser, user:string,pass:string, sch:stri
         await page.goto(loginURL);
         page = await GetCurrentPage(browser);
     }
+
+    await page.waitForNetworkIdle();
 
     //Select Elev user
     await page.select("select[id=usertype]", "1");
@@ -45,6 +49,8 @@ export const GetLunchMenu = async (browser:puppeteer.Browser,username:string,pas
     var page = await Auth(browser,username,password,sch);
     if(page === null){return;}
 
+    console.log("Lunch - Authed");
+
     const menu = await page.$("a[name=lunchmenu]");
     menu?.click();
 
@@ -52,6 +58,8 @@ export const GetLunchMenu = async (browser:puppeteer.Browser,username:string,pas
     await page.waitForNetworkIdle();
 
     const lunches =  await page.$$("#lunchmenu_con_content > table");
+
+    console.log("Lunch - Fetching lunches");
 
     var lunch:ILunch[] = [];
     for(var i = 0; i < lunches.length; i ++)
@@ -68,6 +76,8 @@ export const GetLunchMenu = async (browser:puppeteer.Browser,username:string,pas
         });
     }
 
+    console.log("Lunch - Done fetching lunches");
+
     var promises:Promise<string>[] = [];
     for(var i = 0; i < lunch.length; i ++)
     {
@@ -81,6 +91,8 @@ export const GetLunchMenu = async (browser:puppeteer.Browser,username:string,pas
 
                 if(!firstImg){return reject("")}
 
+                console.log("Lunch - Image found on google");
+
                 resolve(await(await firstImg.getProperty("src")).jsonValue())
             });
         }
@@ -88,11 +100,16 @@ export const GetLunchMenu = async (browser:puppeteer.Browser,username:string,pas
         promises.push(image(browser, lunch[i].normal));
     }
 
+    console.log("Lunch - All google fetches started");
+
     return await Promise.all<string>(promises).then(res=>{
         for(var i = 0; i < res.length; i ++)
         {
             lunch[i].img = res[i] || "";
         }
+        
+        console.log("Lunch - Returning lunches");
+
         return lunch
     });
 }
@@ -103,6 +120,8 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
     var page = await Auth(browser,user,pass,sch);
     if(page === null){return;}
 
+    console.log("Lesson - Authed");
+
     const scheduleButton = await page.$("[id=menu_schedule]");
     await scheduleButton?.click();
 
@@ -112,6 +131,8 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
     page = (await browser.pages())[1];
 
     const schedules = await page.$$('a.schedule')
+
+    console.log("Lesson - Viewing schedule");
 
     const currentDate = new Date();
     const currentDay = currentDate.getDay()
@@ -128,6 +149,8 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
         endMinute:0,
         teacher:""
     }
+
+    console.log("Lesson - Starting to loop over lessons");
 
     for(var i = 0; i < schedules.length; i ++){
         const eng = await schedules[i].$("span");
@@ -183,12 +206,18 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
                     teacher:teacherContent?.split("<br>")[0] || "",
                     color:color
                 }
+
+                console.log("Lesson - Setting lesson: ", lesson);
             }
         }
 
         const closeButton = await page.$("button[title=close]");
         await closeButton?.click();
+
+        console.log("Lesson - Closing button", details);
     }
+
+    console.log("Lesson - Found closest lesson");
 
     return lesson;
 };
