@@ -98,28 +98,10 @@ export const GetLunchMenu = async (browser:puppeteer.Browser,username:string,pas
 }
 
 export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:string,sch:string) => {
-    var page = await browser.newPage();
-    await page.goto(`https://sms12.schoolsoft.se/${sch}/jsp/Login.jsp`);
+    await browser.newPage();
 
-    await page.select("select[id=usertype]", "1");
-    //await sleep(1000);
-    await page.waitForNetworkIdle();
-
-    page = (await browser.pages())[1];
-
-    const username = await page.$("[id=ssusername]")
-    const password = await page.$("[id=sspassword]")
-    const loginButton = await page.$("[type=submit]")
-    if(username === null || password === null){return;}
-
-    await username.type(user)
-    await password.type(pass)
-    await loginButton?.click();
-
-    //await sleep(3000);
-    await page.waitForNetworkIdle();
-
-    page = (await browser.pages())[1];
+    var page = await Auth(browser,user,pass,sch);
+    if(page === null){return;}
 
     const scheduleButton = await page.$("[id=menu_schedule]");
     await scheduleButton?.click();
