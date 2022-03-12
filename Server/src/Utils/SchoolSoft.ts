@@ -221,7 +221,7 @@ export const GetNextLesson = async (browser:puppeteer.Browser,user:string,pass:s
 
         //const closeButton = await page.$("button[title=close]");
         //await closeButton?.click();
-        page.keyboard.press("Escape");
+        await page.keyboard.press("Escape");
 
         console.log("Lesson - Closing button", details);
     }
