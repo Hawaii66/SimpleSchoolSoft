@@ -11,7 +11,7 @@ export const Routes = (app:Express) => {
             return res.status(400).send("Not valid username or password");
         }
 
-        const browser = await puppeteer.launch({headless:true});
+        const browser = await puppeteer.launch({headless:true,args:["--disable-gpu"]});
         try{
             var result = await GetLunchMenu(browser,username,password,school);
             browser.close();
@@ -36,7 +36,7 @@ export const Routes = (app:Express) => {
             return res.status(400).send("Not valid username or password formating");
         }
 
-        const browser = await puppeteer.launch({headless:false});
+        const browser = await puppeteer.launch({headless:true,args:["--disable-gpu"]});
         try{
             var result = await GetNextLesson(browser, username, password, school);
             browser.close();
