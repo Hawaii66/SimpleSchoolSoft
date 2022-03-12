@@ -5,6 +5,8 @@ function useAuthed() {
     const {username,password,school} = useContext(UserContext);
     
     const auth = () => {
+        console.log(username,password,school);
+
         return username !== "" && password !== "" && school !== "";
     }
 

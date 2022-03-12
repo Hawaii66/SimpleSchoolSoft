@@ -18,8 +18,10 @@ function RouterApp() {
             {
                 console.log("TEST");
                 navigate(`/login?callback=${location.pathname}`);
+            }else{
+                console.log("Already authed");
             }
-        },500);
+        },100);
 	},[])
 
     if(loading){
